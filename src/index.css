@@ -1,0 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  background: #0a0118;
+  color: #f0f9ff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.glass-panel {
+  border: 1px solid rgba(240, 249, 255, 0.14);
+  background: rgba(17, 20, 45, 0.58);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.constellation-layer {
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(0, 229, 255, 0.8) 0 1px, transparent 2px),
+    radial-gradient(circle at 32% 34%, rgba(109, 93, 251, 0.9) 0 1px, transparent 2px),
+    radial-gradient(circle at 62% 16%, rgba(240, 249, 255, 0.65) 0 1px, transparent 2px),
+    radial-gradient(circle at 88% 28%, rgba(0, 229, 255, 0.7) 0 1px, transparent 2px),
+    linear-gradient(115deg, transparent 0 20%, rgba(0, 229, 255, 0.13) 20.1% 20.35%, transparent 20.5% 100%),
+    linear-gradient(64deg, transparent 0 47%, rgba(109, 93, 251, 0.16) 47.1% 47.35%, transparent 47.5% 100%),
+    linear-gradient(154deg, transparent 0 67%, rgba(240, 249, 255, 0.12) 67.1% 67.28%, transparent 67.45% 100%);
+  background-size: 310px 260px, 420px 330px, 520px 400px, 610px 460px, 430px 360px, 520px 420px, 620px 510px;
+  opacity: 0.46;
+}
