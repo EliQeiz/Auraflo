@@ -1,0 +1,20 @@
+import { requireUser } from "../../server/auth";
+import { enqueueJob } from "../../server/jobs";
+import { getBearerToken, parseBody, withApi } from "../../server/http";
+import { enqueueJobSchema } from "../../server/schemas";
+import { createSupabaseAdmin } from "../../server/supabaseAdmin";
+
+export default withApi(async (req, res) => {
+  const admin = createSupabaseAdmin();
+  const user = await requireUser(admin, getBearerToken(req));
+  const input = enqueueJobSchema.parse(parseBody(req));
+
+  const job = await enqueueJob(admin, {
+    projectId: input.projectId,
+    userId: user.id,
+    jobType: input.jobType,
+    payload: input.payload,
+  });
+
+  res.status(201).json({ job });
+}, ["POST"]);

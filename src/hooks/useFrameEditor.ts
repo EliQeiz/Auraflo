@@ -5,10 +5,11 @@ import type { FrameAsset } from "../types/media";
 interface UseFrameEditorOptions {
   projectId: string;
   totalFrames: number;
+  accessToken?: string;
   windowSize?: number;
 }
 
-export function useFrameEditor({ projectId, totalFrames, windowSize = 48 }: UseFrameEditorOptions) {
+export function useFrameEditor({ projectId, totalFrames, accessToken, windowSize = 48 }: UseFrameEditorOptions) {
   const [currentFrame, setCurrentFrame] = useState(0);
   const [frames, setFrames] = useState<FrameAsset[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,27 +53,27 @@ export function useFrameEditor({ projectId, totalFrames, windowSize = 48 }: UseF
   }, [frameWindow.from, frameWindow.to, projectId, totalFrames]);
 
   const runEnhanceFrame = useCallback(async () => {
-    const job = await enhanceFrame(projectId, currentFrame);
+    const job = await enhanceFrame(projectId, currentFrame, accessToken);
     setPendingJob(job.id);
     return job;
-  }, [currentFrame, projectId]);
+  }, [accessToken, currentFrame, projectId]);
 
   const runBlurFace = useCallback(
     async (faceId: string) => {
-      const job = await blurFace(projectId, currentFrame, faceId);
+      const job = await blurFace(projectId, currentFrame, faceId, accessToken);
       setPendingJob(job.id);
       return job;
     },
-    [currentFrame, projectId],
+    [accessToken, currentFrame, projectId],
   );
 
   const runStitchVideo = useCallback(
     async (framerate: number) => {
-      const job = await stitchVideo(projectId, framerate);
+      const job = await stitchVideo(projectId, framerate, accessToken);
       setPendingJob(job.id);
       return job;
     },
-    [projectId],
+    [accessToken, projectId],
   );
 
   return {

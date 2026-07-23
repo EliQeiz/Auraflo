@@ -3,8 +3,11 @@ import { AuraFlowProvider } from "./theme/AuraFlowProvider";
 import { AuraButton } from "./components/AuraButton";
 import { AuraCard } from "./components/AuraCard";
 import { FrameCanvas } from "./components/FrameCanvas";
+import { ProjectMonitor } from "./components/ProjectMonitor";
+import { ProjectUploader } from "./components/ProjectUploader";
 import { VideoTimeline } from "./components/VideoTimeline";
 import { useFrameEditor } from "./hooks/useFrameEditor";
+import { useSupabaseSession } from "./hooks/useSupabaseSession";
 import type { FrameAsset } from "./types/media";
 
 const demoFrames: FrameAsset[] = Array.from({ length: 16 }, (_, index) => ({
@@ -17,7 +20,8 @@ const demoFrames: FrameAsset[] = Array.from({ length: 16 }, (_, index) => ({
 }));
 
 function DemoWorkspace() {
-  const editor = useFrameEditor({ projectId: "demo-project", totalFrames: 384 });
+  const { session } = useSupabaseSession();
+  const editor = useFrameEditor({ projectId: "demo-project", totalFrames: 384, accessToken: session?.access_token });
   const current = demoFrames.find((frame) => frame.frame_index === editor.currentFrame) ?? demoFrames[0];
 
   return (
@@ -72,6 +76,8 @@ function DemoWorkspace() {
       </section>
 
       <aside className="grid content-start gap-4">
+        <ProjectUploader session={session} />
+        <ProjectMonitor session={session} />
         <AuraCard
           eyebrow="Super-resolution"
           title="HD/4K Upscaling"

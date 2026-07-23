@@ -61,6 +61,16 @@ create index facial_embeddings_project_id_idx on public.facial_embeddings (proje
 create index facial_embeddings_embedding_idx on public.facial_embeddings using ivfflat (embedding vector_cosine_ops) with (lists = 100);
 create index frame_assets_project_id_frame_idx on public.frame_assets (project_id, frame_index);
 
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values
+  ('original-media', 'original-media', false, 8589934592, array['image/png', 'image/jpeg', 'image/webp', 'video/mp4', 'video/quicktime']),
+  ('processed-media', 'processed-media', false, 8589934592, array['image/png', 'image/jpeg', 'image/webp', 'video/mp4']),
+  ('frame-thumbnails', 'frame-thumbnails', false, 536870912, array['image/jpeg', 'image/webp'])
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
 alter table public.profiles enable row level security;
 alter table public.projects enable row level security;
 alter table public.processing_jobs enable row level security;
@@ -116,6 +126,11 @@ create policy "Users can enqueue jobs for owned projects"
         and projects.user_id = auth.uid()
     )
   );
+
+create policy "Service role can manage processing jobs"
+  on public.processing_jobs for all
+  using (auth.role() = 'service_role')
+  with check (auth.role() = 'service_role');
 
 create policy "Users can read embeddings for owned projects"
   on public.facial_embeddings for select
@@ -180,3 +195,65 @@ as $$
   order by facial_embeddings.embedding <=> query_embedding
   limit match_count;
 $$;
+
+create or replace function public.claim_next_processing_job()
+returns public.processing_jobs
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  claimed_job public.processing_jobs;
+begin
+  update public.processing_jobs
+  set
+    status = 'running',
+    started_at = timezone('utc'::text, now())
+  where id = (
+    select id
+    from public.processing_jobs
+    where status = 'queued'
+    order by queued_at asc
+    for update skip locked
+    limit 1
+  )
+  returning * into claimed_job;
+
+  return claimed_job;
+end;
+$$;
+
+revoke execute on function public.claim_next_processing_job() from anon, authenticated;
+grant execute on function public.claim_next_processing_job() to service_role;
+
+create policy "Users can upload original media into their folder"
+  on storage.objects for insert
+  with check (
+    bucket_id = 'original-media'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+create policy "Users can read original media in owned folders"
+  on storage.objects for select
+  using (
+    bucket_id = 'original-media'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+create policy "Users can read processed media in owned folders"
+  on storage.objects for select
+  using (
+    bucket_id in ('processed-media', 'frame-thumbnails')
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
+
+create policy "Service role can manage AuraFlow storage"
+  on storage.objects for all
+  using (
+    auth.role() = 'service_role'
+    and bucket_id in ('original-media', 'processed-media', 'frame-thumbnails')
+  )
+  with check (
+    auth.role() = 'service_role'
+    and bucket_id in ('original-media', 'processed-media', 'frame-thumbnails')
+  );

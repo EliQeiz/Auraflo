@@ -1,13 +1,20 @@
 import { supabase } from "./supabase";
+import { enqueueBackendJob } from "./backend";
 import type { FrameAsset, ProcessingJobType } from "../types/media";
 
 export interface EnqueueJobInput {
   projectId: string;
   jobType: ProcessingJobType;
+  accessToken?: string;
   payload?: Record<string, unknown>;
 }
 
-export async function enqueueProcessingJob({ projectId, jobType, payload = {} }: EnqueueJobInput) {
+export async function enqueueProcessingJob({ projectId, jobType, accessToken, payload = {} }: EnqueueJobInput) {
+  if (accessToken) {
+    const response = await enqueueBackendJob(projectId, jobType, accessToken, payload);
+    return response.job;
+  }
+
   const { data, error } = await supabase
     .from("processing_jobs")
     .insert({
@@ -42,26 +49,29 @@ export async function fetchFrameThumbnails(projectId: string, fromFrame: number,
   return (data ?? []) as FrameAsset[];
 }
 
-export function enhanceFrame(projectId: string, frameIndex: number) {
+export function enhanceFrame(projectId: string, frameIndex: number, accessToken?: string) {
   return enqueueProcessingJob({
     projectId,
     jobType: "enhance_frame",
+    accessToken,
     payload: { frameIndex, model: "Real-ESRGAN" },
   });
 }
 
-export function blurFace(projectId: string, frameIndex: number, faceId: string) {
+export function blurFace(projectId: string, frameIndex: number, faceId: string, accessToken?: string) {
   return enqueueProcessingJob({
     projectId,
     jobType: "blur_face",
+    accessToken,
     payload: { frameIndex, faceId, mask: "gaussian" },
   });
 }
 
-export function stitchVideo(projectId: string, framerate: number) {
+export function stitchVideo(projectId: string, framerate: number, accessToken?: string) {
   return enqueueProcessingJob({
     projectId,
     jobType: "stitch_video",
+    accessToken,
     payload: { framerate, encoder: "ffmpeg-h264", preserveAudio: true },
   });
 }
