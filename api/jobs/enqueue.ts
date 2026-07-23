@@ -1,8 +1,8 @@
-import { requireUser } from "../../server/auth";
-import { enqueueJob } from "../../server/jobs";
-import { getBearerToken, parseBody, withApi } from "../../server/http";
-import { enqueueJobSchema } from "../../server/schemas";
-import { createSupabaseAdmin } from "../../server/supabaseAdmin";
+import { requireUser } from "../../server/auth.js";
+import { enqueueJob } from "../../server/jobs.js";
+import { getBearerToken, parseBody, withApi } from "../../server/http.js";
+import { enqueueJobSchema } from "../../server/schemas.js";
+import { createSupabaseAdmin } from "../../server/supabaseAdmin.js";
 
 export default withApi(async (req, res) => {
   const admin = createSupabaseAdmin();

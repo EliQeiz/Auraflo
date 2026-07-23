@@ -1,8 +1,8 @@
-import type { SupabaseAdminClient } from "../server/supabaseAdmin";
+import type { SupabaseAdminClient } from "../server/supabaseAdmin.js";
 import type { ProcessingJobType } from "../src/types/media";
-import { detectFaces } from "./processors/faces";
-import { createImageThumbnail, upscaleImage } from "./processors/image";
-import { extractVideoThumbnails, upscaleVideo } from "./processors/video";
+import { detectFaces } from "./processors/faces.js";
+import { createImageThumbnail, upscaleImage } from "./processors/image.js";
+import { extractVideoThumbnails, upscaleVideo } from "./processors/video.js";
 
 interface ProcessingJob {
   id: string;

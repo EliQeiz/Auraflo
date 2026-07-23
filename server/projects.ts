@@ -1,6 +1,6 @@
 import path from "node:path";
-import { ApiError } from "./http";
-import type { SupabaseAdminClient } from "./supabaseAdmin";
+import { ApiError } from "./http.js";
+import type { SupabaseAdminClient } from "./supabaseAdmin.js";
 import type { MediaType, ProcessingJobType } from "../src/types/media";
 
 const bucketByMediaType: Record<"original" | "processed" | "thumbnails", string> = {

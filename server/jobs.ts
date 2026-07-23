@@ -1,5 +1,5 @@
-import { ApiError } from "./http";
-import type { SupabaseAdminClient } from "./supabaseAdmin";
+import { ApiError } from "./http.js";
+import type { SupabaseAdminClient } from "./supabaseAdmin.js";
 import type { ProcessingJobType } from "../src/types/media";
 
 export interface EnqueueJobOptions {

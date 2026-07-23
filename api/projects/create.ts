@@ -1,8 +1,8 @@
-import { requireUser } from "../../server/auth";
-import { getBearerToken, parseBody, withApi } from "../../server/http";
-import { createProjectWithSignedUpload } from "../../server/projects";
-import { createProjectSchema } from "../../server/schemas";
-import { createSupabaseAdmin } from "../../server/supabaseAdmin";
+import { requireUser } from "../../server/auth.js";
+import { getBearerToken, parseBody, withApi } from "../../server/http.js";
+import { createProjectWithSignedUpload } from "../../server/projects.js";
+import { createProjectSchema } from "../../server/schemas.js";
+import { createSupabaseAdmin } from "../../server/supabaseAdmin.js";
 
 export default withApi(async (req, res) => {
   const admin = createSupabaseAdmin();

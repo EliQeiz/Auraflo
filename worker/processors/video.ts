@@ -1,8 +1,8 @@
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
-import type { SupabaseAdminClient } from "../../server/supabaseAdmin";
-import { runFfmpeg } from "../ffmpeg";
-import { downloadStorageObject, uploadStorageObject } from "../storage";
+import type { SupabaseAdminClient } from "../../server/supabaseAdmin.js";
+import { runFfmpeg } from "../ffmpeg.js";
+import { downloadStorageObject, uploadStorageObject } from "../storage.js";
 
 export async function upscaleVideo(
   admin: SupabaseAdminClient,

@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import type { SupabaseAdminClient } from "../server/supabaseAdmin";
+import type { SupabaseAdminClient } from "../server/supabaseAdmin.js";
 
 export async function downloadStorageObject(
   admin: SupabaseAdminClient,

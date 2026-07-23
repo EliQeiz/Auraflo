@@ -1,7 +1,7 @@
 import { mkdir, rm } from "node:fs/promises";
-import { createSupabaseAdmin } from "../server/supabaseAdmin";
-import { getWorkerEnv } from "../server/env";
-import { processJob } from "./processor";
+import { createSupabaseAdmin } from "../server/supabaseAdmin.js";
+import { getWorkerEnv } from "../server/env.js";
+import { processJob } from "./processor.js";
 
 const env = getWorkerEnv();
 const admin = createSupabaseAdmin();

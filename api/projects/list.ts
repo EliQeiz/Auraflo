@@ -1,6 +1,6 @@
-import { requireUser } from "../../server/auth";
-import { getBearerToken, withApi } from "../../server/http";
-import { createSupabaseAdmin } from "../../server/supabaseAdmin";
+import { requireUser } from "../../server/auth.js";
+import { getBearerToken, withApi } from "../../server/http.js";
+import { createSupabaseAdmin } from "../../server/supabaseAdmin.js";
 
 export default withApi(async (req, res) => {
   const admin = createSupabaseAdmin();

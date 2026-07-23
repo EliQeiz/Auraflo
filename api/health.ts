@@ -1,4 +1,4 @@
-import { withApi } from "../server/http";
+import { withApi } from "../server/http.js";
 
 export default withApi(async (_req, res) => {
   res.status(200).json({

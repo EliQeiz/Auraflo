@@ -1,7 +1,7 @@
 import path from "node:path";
 import sharp from "sharp";
-import type { SupabaseAdminClient } from "../../server/supabaseAdmin";
-import { downloadStorageObject, uploadStorageObject } from "../storage";
+import type { SupabaseAdminClient } from "../../server/supabaseAdmin.js";
+import { downloadStorageObject, uploadStorageObject } from "../storage.js";
 
 export async function upscaleImage(
   admin: SupabaseAdminClient,
