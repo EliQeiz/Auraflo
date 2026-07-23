@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { HTMLMotionProps, motion } from "framer-motion";
 import { twMerge } from "tailwind-merge";
 
-type AuraButtonVariant = "primary" | "icon-purple" | "ghost";
+type AuraButtonVariant = "primary" | "secondary" | "icon-purple" | "ghost" | "danger";
 
 interface AuraButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
   variant?: AuraButtonVariant;
@@ -13,10 +13,14 @@ interface AuraButtonProps extends Omit<HTMLMotionProps<"button">, "children"> {
 const variants: Record<AuraButtonVariant, string> = {
   primary:
     "bg-cta-cyan px-5 py-3 text-sm font-bold text-white shadow-cyan-glow hover:shadow-[0_0_34px_rgba(0,229,255,0.58)]",
+  secondary:
+    "border-accent-cyan/25 bg-accent-cyan/10 px-4 py-2 text-sm font-bold text-accent-cyan hover:border-accent-cyan/70 hover:bg-accent-cyan/15",
   "icon-purple":
     "aspect-square h-11 rounded-lg bg-profile-purple p-0 text-lg font-extrabold text-white shadow-purple-glow hover:shadow-[0_0_36px_rgba(168,85,247,0.62)]",
   ghost:
     "glass-panel px-4 py-2 text-sm font-semibold text-text-main hover:border-accent-cyan/45 hover:bg-white/10",
+  danger:
+    "border-amber-300/30 bg-amber-300/10 px-4 py-2 text-sm font-bold text-amber-200 hover:border-amber-300/70 hover:bg-amber-300/15",
 };
 
 export function AuraButton({ variant = "primary", icon, className, children, ...props }: AuraButtonProps) {

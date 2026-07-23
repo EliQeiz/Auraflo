@@ -8,11 +8,12 @@ import { AuraButton } from "./AuraButton";
 
 interface ProjectUploaderProps {
   session: Session | null;
+  onQueued?: () => void;
 }
 
-export function ProjectUploader({ session }: ProjectUploaderProps) {
+export function ProjectUploader({ session, onQueued }: ProjectUploaderProps) {
   const [email, setEmail] = useState("");
-  const [projectName, setProjectName] = useState("Untitled enhancement");
+  const [projectName, setProjectName] = useState("Case media import");
   const [mediaType, setMediaType] = useState<MediaType>("video");
   const [file, setFile] = useState<File | null>(null);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
@@ -51,13 +52,14 @@ export function ProjectUploader({ session }: ProjectUploaderProps) {
       mediaType,
       file,
     });
+    onQueued?.();
   }
 
   return (
     <section className="glass-panel rounded-lg p-5" aria-label="Upload project">
-      <div className="mb-4 flex items-center justify-between gap-4">
+      <div className="mb-5 flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-sm font-bold text-text-main">Upload Pipeline</h2>
+          <h2 className="text-sm font-bold text-text-main">Secure Intake</h2>
           <p className="text-xs text-text-muted">{statusText}</p>
         </div>
         {upload.state === "complete" ? <CheckCircle2 className="h-5 w-5 text-accent-cyan" aria-hidden="true" /> : null}
@@ -78,7 +80,7 @@ export function ProjectUploader({ session }: ProjectUploaderProps) {
             />
           </label>
           <AuraButton type="submit" icon={<LogIn className="h-4 w-4" aria-hidden="true" />}>
-            Send Magic Link
+            Authenticate
           </AuraButton>
           {authMessage ? <p className="text-xs leading-5 text-text-muted">{authMessage}</p> : null}
         </form>
@@ -123,7 +125,7 @@ export function ProjectUploader({ session }: ProjectUploaderProps) {
           </label>
 
           <AuraButton type="submit" disabled={!canUpload} icon={<Upload className="h-4 w-4" aria-hidden="true" />}>
-            Upload & Queue
+            Ingest Media
           </AuraButton>
           {upload.projectId ? <p className="text-xs leading-5 text-text-muted">Project: {upload.projectId}</p> : null}
           {upload.jobIds.length ? <p className="text-xs leading-5 text-text-muted">Jobs: {upload.jobIds.join(", ")}</p> : null}
