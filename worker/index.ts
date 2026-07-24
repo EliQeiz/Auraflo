@@ -25,8 +25,33 @@ async function markJobComplete(jobId: string, result: Record<string, unknown>) {
     .single();
 
   if (job?.project_id) {
-    await admin.from("projects").update({ status: "completed", updated_at: new Date().toISOString() }).eq("id", job.project_id);
+    await refreshProjectStatus(job.project_id);
   }
+}
+
+async function refreshProjectStatus(projectId: string) {
+  const { data: jobs, error } = await admin
+    .from("processing_jobs")
+    .select("status")
+    .eq("project_id", projectId);
+
+  if (error || !jobs?.length) {
+    return;
+  }
+
+  const statuses = jobs.map((job) => job.status);
+  const nextStatus = statuses.some((status) => status === "failed")
+    ? "failed"
+    : statuses.some((status) => status === "running")
+      ? "processing"
+      : statuses.some((status) => status === "queued")
+        ? "queued"
+        : "completed";
+
+  await admin
+    .from("projects")
+    .update({ status: nextStatus, updated_at: new Date().toISOString() })
+    .eq("id", projectId);
 }
 
 async function markJobFailed(jobId: string, projectId: string, error: unknown) {

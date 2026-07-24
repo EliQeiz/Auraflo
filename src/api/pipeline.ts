@@ -1,5 +1,5 @@
-import { supabase } from "./supabase";
 import { enqueueBackendJob } from "./backend";
+import { supabase } from "./supabase";
 import type { FrameAsset, ProcessingJobType } from "../types/media";
 
 export interface EnqueueJobInput {
@@ -10,27 +10,12 @@ export interface EnqueueJobInput {
 }
 
 export async function enqueueProcessingJob({ projectId, jobType, accessToken, payload = {} }: EnqueueJobInput) {
-  if (accessToken) {
-    const response = await enqueueBackendJob(projectId, jobType, accessToken, payload);
-    return response.job;
+  if (!accessToken) {
+    throw new Error("Sign in before queueing processing jobs.");
   }
 
-  const { data, error } = await supabase
-    .from("processing_jobs")
-    .insert({
-      project_id: projectId,
-      job_type: jobType,
-      status: "queued",
-      payload,
-    })
-    .select("id,status,queued_at")
-    .single();
-
-  if (error) {
-    throw error;
-  }
-
-  return data;
+  const response = await enqueueBackendJob(projectId, jobType, accessToken, payload);
+  return response.job;
 }
 
 export async function fetchFrameThumbnails(projectId: string, fromFrame: number, toFrame: number) {

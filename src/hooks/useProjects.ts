@@ -1,17 +1,8 @@
 import { useEffect, useState } from "react";
 import { listProjects } from "../api/backend";
-import type { MediaType } from "../types/media";
+import type { Project } from "../types/media";
 
-export interface ProjectSummary {
-  id: string;
-  project_name: string;
-  media_type: MediaType;
-  status: string;
-  storage_path_hd?: string | null;
-  error_message?: string | null;
-  created_at: string;
-  updated_at: string;
-}
+export type ProjectSummary = Project;
 
 export function useProjects(accessToken?: string, refreshKey = 0) {
   const [projects, setProjects] = useState<ProjectSummary[]>([]);

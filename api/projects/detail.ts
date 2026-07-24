@@ -27,12 +27,12 @@ export default withApi(async (req, res) => {
   const [{ data: jobs }, { data: frames }] = await Promise.all([
     admin
       .from("processing_jobs")
-      .select("id,job_type,status,result,queued_at,started_at,completed_at")
+      .select("id,project_id,job_type,status,result,queued_at,started_at,completed_at")
       .eq("project_id", id)
       .order("queued_at", { ascending: false }),
     admin
       .from("frame_assets")
-      .select("id,frame_index,thumbnail_path,enhanced_path,detections,created_at")
+      .select("id,project_id,frame_index,thumbnail_path,enhanced_path,detections,created_at")
       .eq("project_id", id)
       .order("frame_index", { ascending: true })
       .limit(100),

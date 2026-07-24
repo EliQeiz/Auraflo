@@ -1,4 +1,4 @@
-import type { MediaType, ProcessingJobType } from "../types/media";
+import type { FrameAsset, MediaType, ProcessingJob, ProcessingJobType, Project } from "../types/media";
 
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? "";
 
@@ -29,14 +29,7 @@ export interface CreateProjectUploadInput {
 }
 
 export interface CreateProjectUploadResponse {
-  project: {
-    id: string;
-    project_name: string;
-    media_type: MediaType;
-    storage_path_original: string;
-    status: string;
-    created_at: string;
-  };
+  project: Project;
   upload: {
     bucket: string;
     path: string;
@@ -71,7 +64,7 @@ export function enqueueBackendJob(
   accessToken: string,
   payload: Record<string, unknown> = {},
 ) {
-  return apiFetch<{ job: { id: string; status: string; job_type: ProcessingJobType } }>("/api/jobs/enqueue", accessToken, {
+  return apiFetch<{ job: ProcessingJob }>("/api/jobs/enqueue", accessToken, {
     projectId,
     jobType,
     payload,
@@ -79,31 +72,20 @@ export function enqueueBackendJob(
 }
 
 export function listProjects(accessToken: string) {
-  return apiFetch<{
-    projects: Array<{
-      id: string;
-      project_name: string;
-      media_type: MediaType;
-      status: string;
-      storage_path_hd?: string | null;
-      error_message?: string | null;
-      created_at: string;
-      updated_at: string;
-    }>;
-  }>("/api/projects/list", accessToken);
+  return apiFetch<{ projects: Project[] }>("/api/projects/list", accessToken);
 }
 
 export function getProjectDetail(projectId: string, accessToken: string) {
   return apiFetch<{
-    project: {
-      id: string;
-      project_name: string;
-      media_type: MediaType;
-      status: string;
-      storage_path_hd?: string | null;
-      error_message?: string | null;
-    };
-    jobs: Array<{ id: string; job_type: ProcessingJobType; status: string }>;
-    frames: Array<{ id: string; frame_index: number; thumbnail_path: string }>;
+    project: Project;
+    jobs: ProcessingJob[];
+    frames: FrameAsset[];
   }>(`/api/projects/detail?id=${encodeURIComponent(projectId)}`, accessToken);
+}
+
+export function signReadUrl(
+  input: { bucket: "original-media" | "processed-media" | "frame-thumbnails"; path: string; expiresIn?: number },
+  accessToken: string,
+) {
+  return apiFetch<{ signedUrl: string; expiresIn: number }>("/api/media/sign-read", accessToken, input);
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import type { FaceDetection } from "../types/media";
 
 interface FrameCanvasProps {
-  imageUrl: string;
+  imageUrl: string | null;
   detections?: FaceDetection[];
 }
 
@@ -45,10 +45,21 @@ export function FrameCanvas({ imageUrl, detections = [] }: FrameCanvasProps) {
   }, [detections, imageUrl]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      aria-label="Current frame with facial detection overlays"
-      className="aspect-video w-full rounded-lg border border-white/10 bg-background-dark object-contain shadow-card-glow"
-    />
+    <div className="relative aspect-video overflow-hidden rounded-lg border border-white/10 bg-background-dark shadow-card-glow">
+      {imageUrl ? (
+        <canvas
+          ref={canvasRef}
+          aria-label="Current frame with facial detection overlays"
+          className="h-full w-full object-contain"
+        />
+      ) : (
+        <div className="grid h-full place-items-center p-6 text-center">
+          <div>
+            <p className="text-sm font-bold text-text-main">No frame preview available</p>
+            <p className="mt-2 max-w-md text-sm leading-6 text-text-muted">Upload media and run the worker to generate signed frame thumbnails.</p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

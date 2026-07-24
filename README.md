@@ -1,15 +1,15 @@
 # AuraFlow
 
-AuraFlow is a React, TypeScript, Tailwind, Framer Motion, and Supabase foundation for AI-driven media enhancement workflows.
+AuraFlow is a React, TypeScript, Tailwind, Framer Motion, Vercel, and Supabase platform for private AI media enhancement workflows.
 
-The starter includes:
+The platform includes:
 
-- A dark glassmorphism interface inspired by the AuraFlow reference design.
-- Animated reusable UI primitives for CTA buttons, profile buttons, cards, frame canvas overlays, and a video timeline.
+- A project-centered command interface for media intake, processing jobs, frame workbench, identity review, exports, and system readiness.
+- Reusable UI primitives for actions, panels, frame canvas overlays, status states, and private media workflows.
 - Supabase schema and RLS policies for projects, async processing jobs, frame assets, and `pgvector` facial embeddings.
-- Frontend API helpers that enqueue long-running media actions instead of blocking the UI.
+- Frontend API helpers that fetch live project details, sign private media URLs, and enqueue long-running media actions.
 - Vercel-compatible API routes for auth-guarded project creation, signed uploads, upload completion, project status, signed media reads, and job queueing.
-- A Node worker that claims queued jobs and runs local Sharp/FFmpeg processors.
+- A Node worker that claims queued jobs, runs local Sharp/FFmpeg processors, and keeps project status aligned with the whole job set.
 
 ## Run Locally
 
@@ -46,7 +46,7 @@ Run the queue worker in a separate terminal:
 npm run worker:dev
 ```
 
-The worker uses the Supabase service role key, downloads original media, processes it with Sharp/FFmpeg, uploads processed assets, writes thumbnails, and marks jobs complete or failed.
+The worker uses the Supabase service role key, downloads original media, processes it with Sharp/FFmpeg, uploads processed assets, writes thumbnails, and updates project status from the full job lifecycle.
 
 ## Build
 

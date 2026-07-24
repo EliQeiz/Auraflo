@@ -45,6 +45,18 @@ select {
   -webkit-backdrop-filter: blur(12px);
 }
 
+.platform-panel {
+  border: 1px solid rgba(240, 249, 255, 0.12);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01)),
+    rgba(14, 15, 34, 0.72);
+  box-shadow: 0 22px 70px rgba(0, 229, 255, 0.075);
+  padding: 1rem;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
 .constellation-layer {
   background-image:
     radial-gradient(circle at 12% 18%, rgba(0, 229, 255, 0.8) 0 1px, transparent 2px),

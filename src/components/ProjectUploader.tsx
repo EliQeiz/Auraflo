@@ -13,7 +13,7 @@ interface ProjectUploaderProps {
 
 export function ProjectUploader({ session, onQueued }: ProjectUploaderProps) {
   const [email, setEmail] = useState("");
-  const [projectName, setProjectName] = useState("Case media import");
+  const [projectName, setProjectName] = useState("");
   const [mediaType, setMediaType] = useState<MediaType>("video");
   const [file, setFile] = useState<File | null>(null);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
@@ -56,11 +56,12 @@ export function ProjectUploader({ session, onQueued }: ProjectUploaderProps) {
   }
 
   return (
-    <section className="glass-panel rounded-lg p-5" aria-label="Upload project">
+    <section className="platform-panel" aria-label="Upload project">
       <div className="mb-5 flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-sm font-bold text-text-main">Secure Intake</h2>
-          <p className="text-xs text-text-muted">{statusText}</p>
+          <p className="mb-1 text-[11px] font-black uppercase text-accent-cyan">Secure intake</p>
+          <h2 className="text-base font-black text-text-main">Create Processing Workspace</h2>
+          <p className="mt-1 text-xs text-text-muted">{statusText}</p>
         </div>
         {upload.state === "complete" ? <CheckCircle2 className="h-5 w-5 text-accent-cyan" aria-hidden="true" /> : null}
         {upload.state === "failed" ? <AlertTriangle className="h-5 w-5 text-amber-300" aria-hidden="true" /> : null}
@@ -69,29 +70,30 @@ export function ProjectUploader({ session, onQueued }: ProjectUploaderProps) {
       {!session ? (
         <form className="grid gap-3" onSubmit={handleMagicLink}>
           <label className="grid gap-2 text-xs font-semibold text-text-muted">
-            Email
+            Work Email
             <input
               className="rounded-lg border border-white/10 bg-background-dark/80 px-3 py-3 text-sm text-text-main outline-none focus:border-accent-cyan"
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@example.com"
+              placeholder="name@company.com"
               required
             />
           </label>
           <AuraButton type="submit" icon={<LogIn className="h-4 w-4" aria-hidden="true" />}>
-            Authenticate
+            Send Magic Link
           </AuraButton>
           {authMessage ? <p className="text-xs leading-5 text-text-muted">{authMessage}</p> : null}
         </form>
       ) : (
         <form className="grid gap-3" onSubmit={handleUpload}>
           <label className="grid gap-2 text-xs font-semibold text-text-muted">
-            Project Name
+            Workspace Name
             <input
               className="rounded-lg border border-white/10 bg-background-dark/80 px-3 py-3 text-sm text-text-main outline-none focus:border-accent-cyan"
               value={projectName}
               onChange={(event) => setProjectName(event.target.value)}
+              placeholder="Restoration batch, case footage, archive import"
               required
             />
           </label>
@@ -114,9 +116,9 @@ export function ProjectUploader({ session, onQueued }: ProjectUploaderProps) {
           </div>
 
           <label className="grid gap-2 text-xs font-semibold text-text-muted">
-            Media File
+            Source Media
             <input
-              className="rounded-lg border border-dashed border-white/15 bg-background-dark/70 px-3 py-3 text-sm text-text-muted outline-none file:mr-3 file:rounded-md file:border-0 file:bg-accent-cyan file:px-3 file:py-2 file:text-xs file:font-bold file:text-white focus:border-accent-cyan"
+              className="rounded-lg border border-dashed border-accent-cyan/25 bg-background-dark/70 px-3 py-6 text-sm text-text-muted outline-none file:mr-3 file:rounded-md file:border-0 file:bg-accent-cyan file:px-3 file:py-2 file:text-xs file:font-bold file:text-white focus:border-accent-cyan"
               type="file"
               accept={mediaType === "video" ? "video/mp4,video/quicktime" : "image/png,image/jpeg,image/webp"}
               onChange={(event) => setFile(event.target.files?.[0] ?? null)}
@@ -125,7 +127,7 @@ export function ProjectUploader({ session, onQueued }: ProjectUploaderProps) {
           </label>
 
           <AuraButton type="submit" disabled={!canUpload} icon={<Upload className="h-4 w-4" aria-hidden="true" />}>
-            Ingest Media
+            Upload And Queue
           </AuraButton>
           {upload.projectId ? <p className="text-xs leading-5 text-text-muted">Project: {upload.projectId}</p> : null}
           {upload.jobIds.length ? <p className="text-xs leading-5 text-text-muted">Jobs: {upload.jobIds.join(", ")}</p> : null}
